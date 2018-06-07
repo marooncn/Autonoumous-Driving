@@ -20,7 +20,7 @@ from keras.optimizers import SGD , Adam, RMSprop
 from gym_torcs import TorcsEnv
 
 
-learning_rate = 1e-2
+learning_rate = 1e-4
 img_dim = [64, 64, 3]
 n_action = 1        # steer only (float, left and right 1 ~ -1)
 steps = 1000        # maximum step for a game
@@ -210,22 +210,23 @@ if __name__ == '__main__':
     if not os.path.exists(data_path):
        os.makedirs(data_path)
     data = os.path.join(data_path, 'data.pkl')
-    # agent.collectData()
+    agent.collectData()
     # agent.model = load_model('model.h5')
+    '''
     with open(data, 'rb') as f:
        agent.D = pickle.load(f)
+    '''
     agent.train()
     '''
     with open(data,'ab+') as f:
        pickle.dump(agent.D, f, protocol=pickle.HIGHEST_PROTOCOL)
     '''
     agent.save()
-    learning_rate = 1e-4
     agent.retrain()
 
     # after train, just run 
  
-    for i in range(1):
+    while(1):
          env = TorcsEnv(vision=True, throttle=False)
          ob = env.reset(relaunch=True)
          # load the model
@@ -241,5 +242,3 @@ if __name__ == '__main__':
          print(reward_sum)
          env.end()
     
-
-
